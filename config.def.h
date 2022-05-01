@@ -10,21 +10,28 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;     /* 0 means no bar */
 static const int topbar             = 1;     /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
+static const char *fonts[]          = { "DejaVuSansMono:size=9:antialias=true:autohint=true", "DejaVuSansMono Nerd Font:size=12:antialias=true:autohint=true"};
+static const char dmenufont[]       = "DejaVuSansMono:size=9:antialias=true:autohint=true";
+static const char col_bar[]         = "#2c1a1a";
+static const char col_border[]      = "#2c1a1a";
+static const char col_white[]       = "#efefef";
+static const char col_title[]       = "#000000";
+static const char col_cyan[]        = "#5cd5ff";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	[SchemeNorm] = { col_white, col_bar,   col_border },
+	[SchemeSel]  = { col_title, col_cyan,  col_border  },
 };
 
 static const char *const autostart[] = {
-	"st", NULL,
+        "sh", "/home/yan/git/github/unixStuff/xrandr.sh", NULL,
+        "sh", "/home/yan/git/github/unixStuff/set_bg", "/home/yan/Pictures/bg", NULL,
+        "slstatus", NULL,
+        "gxkb", NULL,
+        "/usr/lib/xfce4/notifyd/xfce4-notifyd", NULL,
+        "pasystray", "--notify=sink_default", "--notify=source_default", NULL,
+        "nm-applet", NULL,
+        "xfce4-clipman", NULL,
 	NULL /* terminate */
 };
 
@@ -32,15 +39,15 @@ static const char *const autostart[] = {
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const char *tagsel[][2] = {
+        { "#ffffff", "#00aaff" },
 	{ "#ffffff", "#ff0000" },
 	{ "#ffffff", "#ff7f00" },
-	{ "#000000", "#ffff00" },
-	{ "#000000", "#00ff00" },
-	{ "#ffffff", "#0000ff" },
-	{ "#ffffff", "#4b0082" },
+	{ "#000000", "#fff44f" },
+	{ "#000000", "#a4f44f" },
+	{ "#ffffff", "#ff55ff" },
 	{ "#ffffff", "#9400d3" },
-	{ "#000000", "#ffffff" },
-	{ "#ffffff", "#000000" },
+	{ "#ffffff", "#468368" },
+	{ "#ffffff", "#ff8368" },
 };
 
 static const Rule rules[] = {
@@ -49,7 +56,7 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+	//{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
@@ -67,26 +74,47 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+/* Media keys */
+#include <X11/XF86keysym.h>
+
+static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
+static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
+static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+
+static const char *uplight[] = { "sh", "/home/yan/git/github/unixStuff/brightness.sh", "up", NULL };
+static const char *downlight[] = { "sh", "/home/yan/git/github/unixStuff/brightness.sh", "down", NULL };
+
+/* Run the susppend script */
+static const char *suspend[] = { "sh", "/home/yan/git/github/unixStuff/suspend.sh", NULL };
+
+/* Lock screen */
+static const char *slock[] = { "/usr/local/bin/slock", NULL };
+
+/* Take a screenshot */
+static const char *printscreen[] = { "/usr/bin/xfce4-screenshooter", NULL };
+
+/* Open clipman */
+static const char *clipman[] = { "/usr/bin/xfce4-popup-clipman", NULL };
+
+/* Poweroff */
+static const char *poweroff[] = { "/usr/bin/poweroff", NULL };
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_bar, "-nf", col_white, "-sb", col_cyan, "-sf", col_title, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
@@ -103,10 +131,10 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_comma,  focusmon,       {.i = +1 } },
+	{ MODKEY,                       XK_period, focusmon,       {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = -1 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -117,6 +145,19 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+
+
+        { 0,                            XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
+	{ 0,                            XF86XK_AudioMute,        spawn, {.v = mutevol } },
+	{ 0,                            XF86XK_AudioRaiseVolume, spawn, {.v = upvol } },
+	{ 0,                            XF86XK_MonBrightnessUp,  spawn, {.v = uplight } },
+	{ 0,                            XF86XK_MonBrightnessDown,spawn, {.v = downlight } },
+	{ 0,                            XF86XK_Sleep,            spawn, {.v = suspend } },
+
+        { MODKEY,                       XK_slash,  spawn,          {.v = slock } },
+        { 0,                            XK_Print,  spawn,          {.v = printscreen } },
+        { ControlMask|Mod1Mask,         XK_c,      spawn,          {.v = clipman } },
+        { ControlMask|Mod4Mask|Mod1Mask,XK_Home,   spawn,          {.v = poweroff } },
 };
 
 /* button definitions */
@@ -132,7 +173,5 @@ static Button buttons[] = {
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
-	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
-	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
 
