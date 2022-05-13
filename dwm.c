@@ -882,14 +882,14 @@ drawbar(Monitor *m)
         if (occ & 1 << i) {
             if (urg & 1 << i && (m->tagset[m->seltags] & 1 << i)) {
                 drw_setscheme(drw, tagscheme[(i + 1) % 9]);
-                drw_rect(drw, x + (boxw / 2), -1, w - (boxw + 1), (boxw - 1), 1, 1);
+                drw_rect(drw, x + (boxw / 2), -1, w - boxw, (boxw - 1), 1, 1);
             }
             else if (urg & 1 << i) {
                 drw_setscheme(drw, tagscheme[i]);
-                drw_rect(drw, x + (boxw / 2), -1, w - (boxw + 1), (boxw - 1), 1, 1);
+                drw_rect(drw, x + (boxw / 2), -1, w - boxw, (boxw - 1), 1, 1);
             }
             else {
-                drw_rect(drw, x + (boxw / 2), -1, w - (boxw + 1), (boxw - 1),
+                drw_rect(drw, x + (boxw / 2), -1, w - boxw, (boxw - 1),
                         m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
                         0);
             }
