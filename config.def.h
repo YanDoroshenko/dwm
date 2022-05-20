@@ -32,6 +32,7 @@ static const char *const autostart[] = {
         "nm-applet", NULL,
         "xfce4-clipman", NULL,
         "sh", "/home/yan/git/github/unixStuff/xrandr.sh", "1", NULL,
+        "keepassxc", NULL,
 	NULL /* terminate */
 };
 
@@ -41,8 +42,7 @@ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 static const char *tagsel[][2] = {
         { "#ffffff", "#00aaff" },
 	{ "#ffffff", "#ff0000" },
-	{ "#ffffff", "#ff7f00" },
-	{ "#000000", "#fff44f" },
+	{ "#ffffff", "#ff7f00" }, { "#000000", "#fff44f" },
 	{ "#000000", "#a4f44f" },
 	{ "#ffffff", "#ff55ff" },
 	{ "#ffffff", "#9400d3" },
@@ -59,7 +59,7 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	//{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "KeePassXC",  NULL,       NULL,       1 << 8,       0,            0 },
 };
 
 /* layout(s) */
