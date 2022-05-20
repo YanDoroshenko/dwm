@@ -50,6 +50,8 @@ static const char *tagsel[][2] = {
 	{ "#ffffff", "#ff8368" },
 };
 
+static const int tagurgbar[] = { 1, 3, 6, 5, 8, 7, 4, 1, 0 };
+
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
