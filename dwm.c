@@ -880,8 +880,12 @@ drawbar(Monitor *m)
 
         drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], 0);
         if (occ & 1 << i) {
-            if (urg & 1 << i) {
+            if (urg & 1 << i && m->tagset[m->seltags] & 1 << i) {
                 drw_setscheme(drw, tagscheme[tagurgbar[i]]);
+                drw_rect(drw, x + (boxw / 2) + 1, -1, w - boxw - 2, (boxw - 1), 1, 1);
+            }
+            else if (urg & 1 << i) {
+                drw_setscheme(drw, tagscheme[0]);
                 drw_rect(drw, x + (boxw / 2) + 1, -1, w - boxw - 2, (boxw - 1), 1, 1);
             }
             else {
