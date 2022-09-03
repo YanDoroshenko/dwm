@@ -112,6 +112,9 @@ static const char *poweroff[] = { "/usr/bin/poweroff", NULL };
 /* Update screen layout */
 static const char *xrandr[] = { "sh", "/home/yan/git/github/unixStuff/xrandr.sh", "0", NULL };
 
+/* Run Syncthing script */
+static const char *syncthing[] = { "sh", "/home/yan/git/github/unixStuff/syncthing.sh", NULL };
+
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_bar, "-nf", col_white, "-sb", col_cyan, "-sf", col_title, NULL };
@@ -165,6 +168,7 @@ static Key keys[] = {
         { ControlMask|Mod1Mask,         XK_c,      spawn,          {.v = clipman } },
         { ControlMask|Mod4Mask|Mod1Mask,XK_Home,   spawn,          {.v = poweroff } },
         { MODKEY,                       XK_x,      spawn,          {.v = xrandr } },
+        { MODKEY,                       XK_s,      spawn,          {.v = syncthing } },
 };
 
 /* button definitions */
