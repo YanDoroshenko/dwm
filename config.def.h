@@ -30,9 +30,9 @@ static const char *const autostart[] = {
         "pasystray", "--notify=sink_default", "--notify=source_default", NULL,
         "nm-applet", NULL,
         "xfce4-clipman", NULL,
-        "sh", "/home/yan/git/github/unixStuff/xrandr.sh", "1", NULL,
+        "sh", "/home/yan/git/github/unixStuff/xrandr.sh", "0", NULL,
         "keepassxc", NULL,
-        "sh", "/home/yan/git/github/unixStuff/set_bg", "/home/yan/Pictures/bg", NULL,
+        "sh", "/home/yan/git/github/unixStuff/set_bg", "/home/yan/Pictures/bg", "1", NULL,
 	NULL /* terminate */
 };
 
