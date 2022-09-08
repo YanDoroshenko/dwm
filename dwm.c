@@ -274,7 +274,7 @@ static const char broken[] = "broken";
 static char stext[256];
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
-static int bh, blw = 0;      /* bar geometry */
+static int bh;               /* bar height */
 static int lrpad;            /* sum of left and right padding for text */
 static int (*xerrorxlib)(Display *, XErrorEvent *);
 static unsigned int numlockmask = 0;
@@ -498,37 +498,37 @@ buttonpress(XEvent *e)
     Monitor *m;
     XButtonPressedEvent *ev = &e->xbutton;
 
-    click = ClkRootWin;
-    /* focus monitor if necessary */
-    if ((m = wintomon(ev->window)) && m != selmon) {
-        unfocus(selmon->sel, 1);
-        selmon = m;
-        focus(NULL);
-    }
-    if (ev->window == selmon->barwin) {
-        i = x = 0;
-        do
-            x += TEXTW(tags[i]);
-        while (ev->x >= x && ++i < LENGTH(tags));
-        if (i < LENGTH(tags)) {
-            click = ClkTagBar;
-            arg.ui = 1 << i;
-        } else if (ev->x < x + blw)
-            click = ClkLtSymbol;
-        else if (ev->x > selmon->ww - (int)TEXTW(stext) - getsystraywidth())
-            click = ClkStatusText;
-        else
-            click = ClkWinTitle;
-    } else if ((c = wintoclient(ev->window))) {
-        focus(c);
-        restack(selmon);
-        XAllowEvents(dpy, ReplayPointer, CurrentTime);
-        click = ClkClientWin;
-    }
-    for (i = 0; i < LENGTH(buttons); i++)
-        if (click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
-                && CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
-            buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+	click = ClkRootWin;
+	/* focus monitor if necessary */
+	if ((m = wintomon(ev->window)) && m != selmon) {
+		unfocus(selmon->sel, 1);
+		selmon = m;
+		focus(NULL);
+	}
+	if (ev->window == selmon->barwin) {
+		i = x = 0;
+		do
+			x += TEXTW(tags[i]);
+		while (ev->x >= x && ++i < LENGTH(tags));
+		if (i < LENGTH(tags)) {
+			click = ClkTagBar;
+			arg.ui = 1 << i;
+		} else if (ev->x < x + TEXTW(selmon->ltsymbol))
+			click = ClkLtSymbol;
+		else if (ev->x > selmon->ww - (int)TEXTW(stext))
+			click = ClkStatusText;
+		else
+			click = ClkWinTitle;
+	} else if ((c = wintoclient(ev->window))) {
+		focus(c);
+		restack(selmon);
+		XAllowEvents(dpy, ReplayPointer, CurrentTime);
+		click = ClkClientWin;
+	}
+	for (i = 0; i < LENGTH(buttons); i++)
+		if (click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
+		&& CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state))
+			buttons[i].func(click == ClkTagBar && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
 }
 
     void
@@ -896,7 +896,7 @@ drawbar(Monitor *m)
         }
         x += w;
     }
-    w = blw = TEXTW(m->ltsymbol);
+    w = TEXTW(m->ltsymbol);
     drw_setscheme(drw, scheme[SchemeNorm]);
     x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
@@ -1231,15 +1231,13 @@ manage(Window w, XWindowAttributes *wa)
         applyrules(c);
     }
 
-    if (c->x + WIDTH(c) > c->mon->mx + c->mon->mw)
-        c->x = c->mon->mx + c->mon->mw - WIDTH(c);
-    if (c->y + HEIGHT(c) > c->mon->my + c->mon->mh)
-        c->y = c->mon->my + c->mon->mh - HEIGHT(c);
-    c->x = MAX(c->x, c->mon->mx);
-    /* only fix client y-offset, if the client center might cover the bar */
-    c->y = MAX(c->y, ((c->mon->by == c->mon->my) && (c->x + (c->w / 2) >= c->mon->wx)
-                && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? bh : c->mon->my);
-    c->bw = borderpx;
+	if (c->x + WIDTH(c) > c->mon->wx + c->mon->ww)
+		c->x = c->mon->wx + c->mon->ww - WIDTH(c);
+	if (c->y + HEIGHT(c) > c->mon->wy + c->mon->wh)
+		c->y = c->mon->wy + c->mon->wh - HEIGHT(c);
+	c->x = MAX(c->x, c->mon->wx);
+	c->y = MAX(c->y, c->mon->wy);
+	c->bw = borderpx;
 
     wc.border_width = c->bw;
     XConfigureWindow(dpy, w, CWBorderWidth, &wc);
@@ -1925,15 +1923,13 @@ sigchld(int unused)
     void
 spawn(const Arg *arg)
 {
-    if (arg->v == dmenucmd)
-        dmenumon[0] = '0' + selmon->num;
-    if (fork() == 0) {
-        if (dpy)
-            close(ConnectionNumber(dpy));
-        setsid();
-        execvp(((char **)arg->v)[0], (char **)arg->v);
-        die("dwm: execvp '%s' failed:", ((char **)arg->v)[0]);
-    }
+	if (fork() == 0) {
+		if (dpy)
+			close(ConnectionNumber(dpy));
+		setsid();
+		execvp(((char **)arg->v)[0], (char **)arg->v);
+		die("dwm: execvp '%s' failed:", ((char **)arg->v)[0]);
+	}
 }
 
     void
