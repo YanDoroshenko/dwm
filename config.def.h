@@ -116,7 +116,8 @@ static const char *xrandr[] = { "sh", "/home/yan/git/github/unixStuff/xrandr.sh"
 static const char *syncthing[] = { "sh", "/home/yan/git/github/unixStuff/syncthing.sh", NULL };
 
 /* commands */
-static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_bar, "-nf", col_white, "-sb", col_cyan, "-sf", col_title, NULL };
+static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_bar, "-nf", col_white, "-sb", col_cyan, "-sf", col_title, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 static const Key keys[] = {
