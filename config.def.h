@@ -122,7 +122,7 @@ static const char *termcmd[]  = { "st", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_semicolon,      spawn,  {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -144,16 +144,16 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = -1 } },
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	TAGKEYS(                        XK_q,                      0)
+	TAGKEYS(                        XK_w,                      1)
+	TAGKEYS(                        XK_e,                      2)
+	TAGKEYS(                        XK_r,                      3)
+	TAGKEYS(                        XK_t,                      4)
+	TAGKEYS(                        XK_y,                      5)
+	TAGKEYS(                        XK_u,                      6)
+	TAGKEYS(                        XK_i,                      7)
+	TAGKEYS(                        XK_o,                      8)
+	{ MODKEY|Mod1Mask,              XK_q,      quit,           {0} },
 
 
         { 0,                            XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
