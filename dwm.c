@@ -1489,9 +1489,9 @@ removesystrayicon(Client *i)
 	if (!showsystray || !i)
 		return;
 	for (ii = &systray->icons; *ii && *ii != i; ii = &(*ii)->next);
-		if (ii)
-			*ii = i->next;
-		free(i);
+	if (ii)
+		*ii = i->next;
+	free(i);
 }
 
 void
@@ -2061,7 +2061,7 @@ toggleview(const Arg *arg)
 		if (!(newtagset & 1 << (selmon->pertag->curtag - 1))) {
 			selmon->pertag->prevtag = selmon->pertag->curtag;
 			for (i = 0; !(newtagset & 1 << i); i++) ;
-				selmon->pertag->curtag = i + 1;
+			selmon->pertag->curtag = i + 1;
 		}
 
 		/* apply settings for this view */
@@ -2515,7 +2515,7 @@ view(const Arg *arg)
 			selmon->pertag->curtag = 0;
 		else {
 			for (i = 0; !(arg->ui & 1 << i); i++) ;
-				selmon->pertag->curtag = i + 1;
+			selmon->pertag->curtag = i + 1;
 		}
 	} else {
 		tmptag = selmon->pertag->prevtag;
