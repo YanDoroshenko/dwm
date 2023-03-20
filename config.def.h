@@ -26,7 +26,7 @@ static const char *colors[][3]      = {
 static const char *const autostart[] = {
         "slstatus", NULL,
         "gxkb", NULL,
-        "/usr/lib/xfce4/notifyd/xfce4-notifyd", NULL,
+        "wired", NULL,
         "pasystray", "--notify=sink_default", "--notify=source_default", NULL,
         "nm-applet", NULL,
         "xfce4-clipman", NULL,
