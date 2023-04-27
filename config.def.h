@@ -102,6 +102,9 @@ static const char *slock[] = { "/usr/local/bin/slock", NULL };
 /* Take a screenshot */
 static const char *printscreen[] = { "/usr/bin/xfce4-screenshooter", NULL };
 
+/* Launch Brave browser */
+static const char *brave[] = { "/sbin/brave", NULL };
+
 /* Open clipman */
 static const char *clipman[] = { "/usr/bin/xfce4-popup-clipman", NULL };
 
@@ -161,6 +164,7 @@ static const Key keys[] = {
         { ControlMask|Mod1Mask,         XK_c,      spawn,          {.v = clipman } },
         { ControlMask|Mod4Mask|Mod1Mask,XK_Home,   spawn,          {.v = poweroff } },
         { MODKEY,                       XK_x,      spawn,          {.v = xrandr } },
+        { MODKEY,                       XK_n,      spawn,          {.v = brave } },
 };
 
 /* button definitions */
