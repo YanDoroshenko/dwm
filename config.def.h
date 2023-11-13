@@ -10,7 +10,7 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;     /* 0 means no bar */
 static const int topbar             = 1;     /* 0 means bottom bar */
-static const char *fonts[]          = { "DejaVuSansMono:size=9:antialias=true:autohint=true", "DejaVuSansMono Nerd Font:size=12:antialias=true:autohint=true"};
+static const char *fonts[]          = { "DejaVuSansMono:size=9:antialias=true:autohint=true", "DejaVuSansM Nerd Font:size=12:antialias=true:autohint=true"};
 static const char dmenufont[]       = "DejaVuSansMono:size=9:antialias=true:autohint=true";
 static const char col_bar[]         = "#2c1a1a";
 static const char col_border[]      = "#2c1a1a";
@@ -30,9 +30,9 @@ static const char *const autostart[] = {
         "pasystray", "--notify=sink_default", "--notify=source_default", NULL,
         "nm-applet", NULL,
         "xfce4-clipman", NULL,
-        "sh", "/home/yan/git/github/unixStuff/xrandr.sh", "1", NULL,
-        "keepassxc", NULL,
+        "sh", "/home/yan/git/github/unixStuff/reinit.sh", "1", NULL,
         "sh", "/home/yan/git/github/unixStuff/set_bg", "/home/yan/Pictures/bg", "2", NULL,
+        "keepassxc", NULL,
 	NULL /* terminate */
 };
 
@@ -93,26 +93,26 @@ static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "togg
 static const char *uplight[] = { "sh", "/home/yan/git/github/unixStuff/brightness.sh", "up", NULL };
 static const char *downlight[] = { "sh", "/home/yan/git/github/unixStuff/brightness.sh", "down", NULL };
 
-/* Run the susppend script */
-static const char *suspend[] = { "sh", "/home/yan/git/github/unixStuff/suspend.sh", NULL };
-
 /* Lock screen */
 static const char *slock[] = { "/usr/local/bin/slock", NULL };
 
 /* Take a screenshot */
-static const char *printscreen[] = { "/usr/bin/xfce4-screenshooter", NULL };
+static const char *printscreen[] = { "sh", "/home/yan/git/github/unixStuff/screenshot.sh", NULL };
 
 /* Launch Brave browser */
 static const char *brave[] = { "/sbin/brave", NULL };
+
+/* Switch battery mode */
+static const char *battery[] = { "sh", "/home/yan/git/github/unixStuff/battery.sh", NULL };
 
 /* Open clipman */
 static const char *clipman[] = { "/usr/bin/xfce4-popup-clipman", NULL };
 
 /* Poweroff */
-static const char *poweroff[] = { "/usr/bin/poweroff", NULL };
+static const char *poweroff[] = { "poweroff", NULL };
 
 /* Update screen layout */
-static const char *xrandr[] = { "sh", "/home/yan/git/github/unixStuff/xrandr.sh", "0", NULL };
+static const char *reinit[] = { "sh", "/home/yan/git/github/unixStuff/reinit.sh", "0", "1", NULL };
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -136,10 +136,10 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_p,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_p,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = +1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = -1 } },
+	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
+	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	TAGKEYS(                        XK_q,                      0)
 	TAGKEYS(                        XK_w,                      1)
 	TAGKEYS(                        XK_e,                      2)
@@ -157,14 +157,14 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_AudioRaiseVolume, spawn, {.v = upvol } },
 	{ 0,                            XF86XK_MonBrightnessUp,  spawn, {.v = uplight } },
 	{ 0,                            XF86XK_MonBrightnessDown,spawn, {.v = downlight } },
-	{ 0,                            XF86XK_Sleep,            spawn, {.v = suspend } },
 
         { MODKEY,                       XK_slash,  spawn,          {.v = slock } },
         { 0,                            XK_Print,  spawn,          {.v = printscreen } },
         { ControlMask|Mod1Mask,         XK_c,      spawn,          {.v = clipman } },
         { ControlMask|Mod4Mask|Mod1Mask,XK_Home,   spawn,          {.v = poweroff } },
-        { MODKEY,                       XK_x,      spawn,          {.v = xrandr } },
+        { MODKEY,                       XK_x,      spawn,          {.v = reinit } },
         { MODKEY,                       XK_n,      spawn,          {.v = brave } },
+        { MODKEY,                       XK_b,      spawn,          {.v = battery } },
 };
 
 /* button definitions */
