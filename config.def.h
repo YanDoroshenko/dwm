@@ -24,14 +24,14 @@ static const char *colors[][3]      = {
 };
 
 static const char *const autostart[] = {
+        "sh", "/home/yan/git/github/unixStuff/set_bg", "/home/yan/Pictures/bg", "2", NULL,
         "slstatus", NULL,
         "gxkb", NULL,
         "wired", NULL,
         "pasystray", "--notify=sink_default", "--notify=source_default", NULL,
         "nm-applet", NULL,
         "xfce4-clipman", NULL,
-        "sh", "/home/yan/git/github/unixStuff/reinit.sh", "1", NULL,
-        "sh", "/home/yan/git/github/unixStuff/set_bg", "/home/yan/Pictures/bg", "2", NULL,
+        "sh", "/home/yan/git/github/unixStuff/layout.sh", "1", NULL,
         "keepassxc", NULL,
 	NULL /* terminate */
 };
@@ -105,6 +105,9 @@ static const char *brave[] = { "/sbin/brave", NULL };
 /* Switch battery mode */
 static const char *battery[] = { "sh", "/home/yan/git/github/unixStuff/battery.sh", NULL };
 
+/* Switch power profile */
+static const char *power[] = { "sh", "/home/yan/git/github/unixStuff/power.sh", NULL };
+
 /* Open clipman */
 static const char *clipman[] = { "/usr/bin/xfce4-popup-clipman", NULL };
 
@@ -112,7 +115,7 @@ static const char *clipman[] = { "/usr/bin/xfce4-popup-clipman", NULL };
 static const char *poweroff[] = { "poweroff", NULL };
 
 /* Update screen layout */
-static const char *reinit[] = { "sh", "/home/yan/git/github/unixStuff/reinit.sh", "0", "1", NULL };
+static const char *layout[] = { "sh", "/home/yan/git/github/unixStuff/layout.sh", "0", NULL };
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -162,9 +165,10 @@ static const Key keys[] = {
         { 0,                            XK_Print,  spawn,          {.v = printscreen } },
         { ControlMask|Mod1Mask,         XK_c,      spawn,          {.v = clipman } },
         { ControlMask|Mod4Mask|Mod1Mask,XK_Home,   spawn,          {.v = poweroff } },
-        { MODKEY,                       XK_x,      spawn,          {.v = reinit } },
+        { MODKEY,                       XK_x,      spawn,          {.v = layout } },
         { MODKEY,                       XK_n,      spawn,          {.v = brave } },
         { MODKEY,                       XK_b,      spawn,          {.v = battery } },
+        { MODKEY,                       XK_v,      spawn,          {.v = power } },
 };
 
 /* button definitions */
