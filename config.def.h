@@ -32,6 +32,7 @@ static const char *const autostart[] = {
         "nm-applet", NULL,
         "xfce4-clipman", NULL,
         "sh", "/home/yan/git/github/unixStuff/layout.sh", "1", NULL,
+        "sh", "/home/yan/git/github/unixStuff/power.sh", "-init", NULL,
         "keepassxc", NULL,
 	NULL /* terminate */
 };
